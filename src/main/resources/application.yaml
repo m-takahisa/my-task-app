@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: TaskPulse
+
+  # Java 21 の Virtual Threads を有効化
+  threads:
+    virtual:
+      enabled: true
+
+  # データベース設定 (まずは H2 を使用)
+  datasource:
+    url: jdbc:h2:mem:taskpulsedb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+  h2:
+    console:
+      enabled: true # ブラウザから DB を確認できるようにする
+
+server:
+  port: 8080
