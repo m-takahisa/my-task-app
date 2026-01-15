@@ -1,10 +1,10 @@
-package com.m_takahisa.taskpulse;
+package com.m_takahisa.taskapp;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class TaskPulseApplicationTests {
+class MyTaskAppApplicationTests {
 
 	@Test
 	void contextLoads() {

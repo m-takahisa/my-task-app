@@ -1,1 +1,1 @@
-rootProject.name = "taskpulse"
+rootProject.name = "my-task-app"
