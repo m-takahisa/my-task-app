@@ -1,3 +1,6 @@
+server:
+  port: 8085
+
 spring:
   # 1. データベース接続設定
   datasource:
