@@ -12,21 +12,22 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "BIGINT") //
     private Long id;
 
-    @Column(unique = true, nullable = false)
-    private String email;
-
-    @Column(nullable = false)
-    private String password;
-
-    @Column(nullable = false)
+    @Column(columnDefinition = "VARCHAR(255)") //
     private String name;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(nullable = false, unique = true, columnDefinition = "VARCHAR(255)") //
+    private String email;
+
+    @Column(nullable = false, columnDefinition = "VARCHAR(255)") //
+    private String password;
+
+    @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "TIMESTAMP") //
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at", nullable = false, columnDefinition = "TIMESTAMP") //
     private LocalDateTime updatedAt;
 
     // 保存前に日時を自動設定する
