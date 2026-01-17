@@ -1,13 +1,13 @@
-package com.m_takahisa.taskpulse;
+package com.m_takahisa.taskapp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class TaskPulseApplication {
+public class MyTaskAppApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(TaskPulseApplication.class, args);
+		SpringApplication.run(MyTaskAppApplication.class, args);
 	}
 
 }

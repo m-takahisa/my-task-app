@@ -1,10 +1,10 @@
 plugins {
 	java
-	id("org.springframework.boot") version "3.5.9"
+	id("org.springframework.boot") version "3.4.1" // 2026年1月現在、安定版の3.4.x推奨（3.5.xはマイルストーン版の可能性あり）
 	id("io.spring.dependency-management") version "1.1.7"
 }
 
-group = "com.m-takahisa"
+group = "com.m_takahisa"
 version = "0.0.1-SNAPSHOT"
 description = "Task management API built with Java 21 and Spring Boot 3"
 
@@ -25,11 +25,18 @@ repositories {
 }
 
 dependencies {
+	// DB関連
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	runtimeOnly("org.postgresql:postgresql")
+
+	// Web関連
 	implementation("org.springframework.boot:spring-boot-starter-web")
+
+	// 便利ツール
 	compileOnly("org.projectlombok:lombok")
-	runtimeOnly("com.h2database:h2")
 	annotationProcessor("org.projectlombok:lombok")
+
+	// テスト関連
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }

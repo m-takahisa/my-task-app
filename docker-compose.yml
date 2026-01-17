@@ -1,0 +1,35 @@
+services:
+  # 1. データベース (PostgreSQL)
+  db:
+    image: postgres:16-alpine
+    container_name: task-app-db
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: task_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./infra/postgres/init:/docker-entrypoint-initdb.d # 初期データ投入用
+      - task-db-data:/var/lib/postgresql/data # データ永続化
+
+  # 2. DB管理ツール (pgAdmin)
+  # ブラウザ(http://localhost:8080)からDBの中身を確認できます
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: task-app-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+
+  # 3. アプリケーション (Spring Boot)
+  # ※ 現時点ではビルドしたjarがないため、まずはDBのみ起動確認します
+  # 後ほどSpring Bootプロジェクトを作成したら、ここに設定を追加します
+
+volumes:
+  task-db-data:

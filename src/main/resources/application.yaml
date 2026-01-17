@@ -1,21 +1,24 @@
-spring:
-  application:
-    name: TaskPulse
-
-  # Java 21 の Virtual Threads を有効化
-  threads:
-    virtual:
-      enabled: true
-
-  # データベース設定 (まずは H2 を使用)
-  datasource:
-    url: jdbc:h2:mem:taskpulsedb
-    driver-class-name: org.h2.Driver
-    username: sa
-    password: password
-  h2:
-    console:
-      enabled: true # ブラウザから DB を確認できるようにする
-
 server:
-  port: 8080
+  port: 8085
+
+spring:
+  # 1. データベース接続設定
+  datasource:
+    url: jdbc:postgresql://localhost:5432/task_db
+    username: user
+    password: password
+    driver-class-name: org.postgresql.Driver
+
+  # 2. JPA / Hibernateの設定
+  jpa:
+    hibernate:
+      # アプリ起動時にEntityに合わせてテーブルを自動更新する
+      ddl-auto: update
+    show-sql: true # 実行されるSQLをコンソールに表示
+    properties:
+      hibernate:
+        format_sql: true # SQLを見やすく整形
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  # 3. セキュリティ設定（開発中は一旦すべて許可する場合の設定例）
+  # ※本格的な実装は後のステップで行います
