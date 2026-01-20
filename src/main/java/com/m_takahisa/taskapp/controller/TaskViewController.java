@@ -7,10 +7,7 @@ import com.m_takahisa.taskapp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -54,5 +51,14 @@ public class TaskViewController {
     public String showCreateForm(Model model) {
         model.addAttribute("task", new Task()); // 空のTaskオブジェクトをフォームに渡す
         return "tasks/create"; // templates/tasks/create.html を表示
+    }
+
+    /**
+     * 削除処理を行う
+     */
+    @PostMapping("/{id}/delete")
+    public String deleteTask(@PathVariable Long id) {
+        taskService.deleteTask(id);
+        return "redirect:/view/tasks"; // 削除後は一覧へ戻る
     }
 }

@@ -21,6 +21,7 @@
         <th>ステータス</th>
         <th>期限</th>
         <th>完了</th>
+        <th>操作</th>
     </tr>
     </thead>
     <tbody>
@@ -34,6 +35,12 @@
         <td>
             <span th:if="${task.completed}" class="text-success">✔ 完了</span>
             <span th:unless="${task.completed}" class="text-secondary">未</span>
+        </td>
+        <td>
+            <form th:action="@{/view/tasks/{id}/delete(id=${task.id})}" method="post"
+                  onsubmit="return confirm('本当に削除しますか？');">
+                <button type="submit" class="btn btn-outline-danger btn-sm">削除</button>
+            </form>
         </td>
     </tr>
     </tbody>

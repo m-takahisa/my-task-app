@@ -39,4 +39,12 @@ public class TaskService {
         task.setUser(user); // タスクに所有者（ユーザー）を紐付ける
         return taskRepository.save(task);
     }
+
+    /**
+     * 指定したIDのタスクを削除します
+     */
+    @Transactional
+    public void deleteTask(Long id) {
+        taskRepository.deleteById(id);
+    }
 }
