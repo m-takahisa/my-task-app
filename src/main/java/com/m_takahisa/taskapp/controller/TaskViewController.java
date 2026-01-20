@@ -61,4 +61,35 @@ public class TaskViewController {
         taskService.deleteTask(id);
         return "redirect:/view/tasks"; // 削除後は一覧へ戻る
     }
+
+    /**
+     * 編集画面を表示する
+     */
+    @GetMapping("/{id}/edit")
+    public String showEditForm(@PathVariable Long id, Model model) {
+        Task task = taskService.findTaskById(id)
+                .orElseThrow(() -> new RuntimeException("タスクが見つかりません ID: " + id));
+        model.addAttribute("task", task);
+        return "tasks/edit"; // templates/tasks/edit.html を表示
+    }
+
+    /**
+     * タスクを更新する
+     */
+    @PostMapping("/{id}/update")
+    public String updateTask(@PathVariable Long id, @ModelAttribute Task task) {
+        // 既存のデータを取得して更新する（安全な実装方法）
+        Task existingTask = taskService.findTaskById(id)
+                .orElseThrow(() -> new RuntimeException("タスクが見つかりません ID: " + id));
+
+        // フォームから送られてきた内容で上書き
+        existingTask.setTitle(task.getTitle());
+        existingTask.setDescription(task.getDescription());
+        existingTask.setDueDate(task.getDueDate());
+        existingTask.setStatus(task.getStatus());
+        existingTask.setCompleted(task.isCompleted());
+
+        taskService.save(existingTask);
+        return "redirect:/view/tasks";
+    }
 }

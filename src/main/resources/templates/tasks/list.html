@@ -37,10 +37,14 @@
             <span th:unless="${task.completed}" class="text-secondary">未</span>
         </td>
         <td>
-            <form th:action="@{/view/tasks/{id}/delete(id=${task.id})}" method="post"
-                  onsubmit="return confirm('本当に削除しますか？');">
-                <button type="submit" class="btn btn-outline-danger btn-sm">削除</button>
-            </form>
+            <div class="d-flex gap-2">
+                <a th:href="@{/view/tasks/{id}/edit(id=${task.id})}" class="btn btn-outline-primary btn-sm">編集</a>
+
+                <form th:action="@{/view/tasks/{id}/delete(id=${task.id})}" method="post"
+                      onsubmit="return confirm('本当に削除しますか？');">
+                    <button type="submit" class="btn btn-outline-danger btn-sm">削除</button>
+                </form>
+            </div>
         </td>
     </tr>
     </tbody>
