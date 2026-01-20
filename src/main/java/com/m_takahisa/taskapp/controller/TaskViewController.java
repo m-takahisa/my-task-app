@@ -7,6 +7,8 @@ import com.m_takahisa.taskapp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,7 +36,12 @@ public class TaskViewController {
      * 登録画面を表示する
      */
     @PostMapping("/create")
-    public String createTask(@ModelAttribute Task task) {
+    public String createTask(@Validated @ModelAttribute Task task, BindingResult bindingResult) {
+        // 入力エラーがある場合は、登録画面に戻す
+        if (bindingResult.hasErrors()) {
+            return "tasks/create";
+        }
+
         // 本来はログインユーザーをセットしますが、一旦特定のユーザー(ID:1)に紐付けます
         User user = userService.findById(1L)
                 .orElseThrow(() -> new RuntimeException("ユーザーが見つかりません"));
@@ -77,7 +84,12 @@ public class TaskViewController {
      * タスクを更新する
      */
     @PostMapping("/{id}/update")
-    public String updateTask(@PathVariable Long id, @ModelAttribute Task task) {
+    public String updateTask(@PathVariable Long id, @Validated @ModelAttribute Task task, BindingResult bindingResult) {
+        // 入力エラーがある場合は、編集画面に戻す
+        if (bindingResult.hasErrors()) {
+            return "tasks/edit";
+        }
+
         // 既存のデータを取得して更新する（安全な実装方法）
         Task existingTask = taskService.findTaskById(id)
                 .orElseThrow(() -> new RuntimeException("タスクが見つかりません ID: " + id));
