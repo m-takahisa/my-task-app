@@ -23,7 +23,16 @@ public class TaskService {
     }
 
     /**
-     * 新しいタスクを保存します
+     * Taskのみを受け取って保存するメソッド
+     * フォームから送信されたTaskオブジェクトをそのまま保存する場合に使用
+     */
+    @Transactional
+    public Task save(Task task) {
+        return taskRepository.save(task);
+    }
+
+    /**
+     * ユーザーを紐付けて保存するメソッド
      */
     @Transactional
     public Task createTask(Task task, User user) {
