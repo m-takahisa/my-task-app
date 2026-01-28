@@ -11,7 +11,8 @@
 | **Entity** | `User.java`, `Task.java` | DBテーブル定義。`@ManyToOne` による1対多のリレーションを構築。 |
 | **Repository** | `UserRepository.java`, `TaskRepository.java` | `JpaRepository` 継承によるDB操作。`findByEmail` 等のカスタムメソッドを定義。 |
 | **Service** | `UserService.java`, `TaskService.java` | ビジネスロジック。`@Transactional` による整合性確保。 |
-| **Controller** | `UserController.java`, `TaskController.java` | REST API窓口。JSON形式でのレスポンス返却。 |
+| **Controller** | `UserController.java`, `TaskController.java` | **REST API窓口**。主にフロントエンドや他システム向けのJSONレスポンス返却を担当。 |
+| **View (UI)** | `TaskViewController.java`, `list.html` | **画面表示制御**。ThymeleafとBootstrap 5を用い、サーバーサイドレンダリング(SSR)でHTMLを生成。。 |
 
 ## 3. 実装のポイント
 * **DDL自動更新**: `application.yml` の `ddl-auto: update` 設定により、Entityの変更をDBへ自動反映。
@@ -19,6 +20,17 @@
 * **DBカラムへの論理名（コメント）付与**:
   - JPAの `@Column(columnDefinition = "...")` を活用し、DBツール上でカラムの役割（論理名）を確認できるように改善。
   - A5M2やpgAdminでのメンテナンス性を向上させ、設計書との不一致を防止。
+* **View (画面表示)の作成**:
+  - **controller/TaskViewController.java**: `@Controller` を使用し、HTML（Thymeleaf）を返すエンドポイント(`/view/tasks`)を実装。
+  - **resources/templates/tasks/list.html**: ThymeleafとBootstrap 5を使用。`th:each` による一覧表示と `th:if` によるステータス判定を実装。
+  - **要点**: API（JSON返却）とView（HTML返却）の使い分けを明確にし、URLパスで分離。
+* **新規登録機能の実装と Optional の導入**:
+  - **機能**: `create.html` のフォームからタスクを登録し、一覧へリダイレクトする機能を実装。
+  - **技術的改善**: ユーザー取得に `Optional<User>` を採用。
+  - **学び**: `Optional` を使うことで、`null` による予期せぬエラー（NullPointerException）を未然に防ぎ、値がない場合の処理（例外スローなど）を簡潔に記述できるようになった。
+* **編集機能の実装**:
+  - **データの引き継ぎ**: 編集画面を開いた時に `model.addAttribute("task", task)` とすることで、現在の値が自動的に各入力欄 (`th:field`) にセットされます。
+  - **更新の安全性**: Controller側で一度DBから最新データを取得（`existingTask`）してから上書きすることで、意図しないデータの消失を防ぎます。
 
 ## 4. 疎通確認の結果
 ブラウザからのリクエストにより、正常にDBへデータが永続化されることを確認。

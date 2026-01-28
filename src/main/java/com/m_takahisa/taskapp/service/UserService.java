@@ -23,6 +23,11 @@ public class UserService {
     }
 
     /**
+     * idでユーザーを検索します
+     */
+    public Optional<User> findById(Long id) { return userRepository.findByid(id); }
+
+    /**
      * 新しいユーザーを登録します
      */
     @Transactional
