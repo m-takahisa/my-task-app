@@ -1,6 +1,7 @@
 package com.m_takahisa.taskapp.controller;
 
 import com.m_takahisa.taskapp.entity.Task;
+import com.m_takahisa.taskapp.entity.TaskStatus;
 import com.m_takahisa.taskapp.entity.User;
 import com.m_takahisa.taskapp.service.TaskService;
 import com.m_takahisa.taskapp.service.UserService;
@@ -22,14 +23,22 @@ public class TaskViewController {
     private final TaskService taskService;
     private final UserService userService;
 
+    /**
+     * 検索を行う
+     */
     @GetMapping
-    public String listTasks(Model model) {
-        // 現在は認証機能が未実装のため、一旦ID:1のユーザーのタスクを取得する想定
-        // ※ServiceにfindByUserIdなどが実装されている前提です
-        List<Task> tasks = taskService.findAllTasks(); // 全件取得でテスト
-        model.addAttribute("tasks", tasks);
+    public String listTasks(
+            @RequestParam(name = "keyword", required = false) String keyword,
+            @RequestParam(name = "status", required = false) TaskStatus status,
+            Model model) {
 
-        return "tasks/list"; // templates/tasks/list.html を探しに行く
+        List<Task> tasks = taskService.searchTasks(keyword, status);
+        model.addAttribute("tasks", tasks);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("selectedStatus", status); // 選択状態の保持用
+        model.addAttribute("statusOptions", TaskStatus.values()); // セレクトボックスの選択肢
+
+        return "tasks/list";
     }
 
     /**

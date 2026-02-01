@@ -8,6 +8,26 @@
 <body class="container py-4">
 <h1 class="mb-4">タスク一覧</h1>
 
+<div class="row mb-4">
+    <div class="col-md-6">
+        <form th:action="@{/view/tasks}" method="get" class="d-flex gap-2">
+            <input type="text" name="keyword" th:value="${keyword}"
+                   class="form-control" placeholder="タイトルで検索...">
+
+            <select name="status" class="form-select">
+                <option value="">すべてのステータス</option>
+                <option th:each="s : ${statusOptions}"
+                        th:value="${s}"
+                        th:text="${s.displayName}"
+                        th:selected="${s == selectedStatus}">
+                </option>
+            </select>
+
+            <button type="submit" class="btn btn-secondary">検索</button>
+            <a th:href="@{/view/tasks}" class="btn btn-outline-secondary">クリア</a>
+        </form>
+    </div>
+</div>
 <!--登録画面へのリンク-->
 <div class="mb-3">
     <a th:href="@{/view/tasks/new}" class="btn btn-success">＋ 新規タスク作成</a>

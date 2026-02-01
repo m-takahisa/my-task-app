@@ -1,6 +1,7 @@
 package com.m_takahisa.taskapp.service;
 
 import com.m_takahisa.taskapp.entity.Task;
+import com.m_takahisa.taskapp.entity.TaskStatus;
 import com.m_takahisa.taskapp.entity.User;
 import com.m_takahisa.taskapp.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
@@ -54,5 +55,29 @@ public class TaskService {
      */
     public Optional<Task> findTaskById(Long id) {
         return taskRepository.findById(id);
+    }
+
+    /**
+     * キーワード、ステータスに基づいてタスクを検索します
+     * どちらも指定がない場合は全件取得を返します
+     */
+    public List<Task> searchTasks(String keyword, TaskStatus status) {
+        boolean hasKeyword = (keyword != null && !keyword.isBlank());
+        boolean hasStatus = (status != null);
+
+        if (hasKeyword) {
+            if (hasStatus) {
+            // キーワード ＋ ステータス絞り込み
+                return taskRepository.findByTitleContainingAndStatus(keyword, status);
+            }
+            // キーワードのみ（ステータスは「すべて」）
+            return taskRepository.findByTitleContaining(keyword);
+        } else if (hasStatus) {
+            // ステータス絞り込み
+            return taskRepository.findByStatus(status);
+        } else {
+            // どちらも指定がない場合
+            return taskRepository.findAll();
+        }
     }
 }
