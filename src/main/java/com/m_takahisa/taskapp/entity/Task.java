@@ -34,8 +34,9 @@ public class Task {
     @Column(name = "due_date", columnDefinition = "DATE") //
     private LocalDate dueDate;
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT 'TODO'") //
-    private String status = "TODO"; // 初期値
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private TaskStatus status = TaskStatus.TODO;
 
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE") //
     private boolean completed = false;
