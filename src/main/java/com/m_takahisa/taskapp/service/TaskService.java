@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,5 +80,15 @@ public class TaskService {
             // どちらも指定がない場合
             return taskRepository.findAll();
         }
+    }
+
+    /**
+     * 期限が過ぎている、または今日が期限の未完了タスクを取得します
+     */
+    public List<Task> getUrgentTasks() {
+        return taskRepository.findByDueDateLessThanEqualAndStatusNot(
+                LocalDate.now(),
+                TaskStatus.DONE
+        );
     }
 }
