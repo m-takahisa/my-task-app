@@ -1,5 +1,6 @@
 package com.m_takahisa.taskapp.controller;
 
+import com.m_takahisa.taskapp.entity.Notification;
 import com.m_takahisa.taskapp.entity.Task;
 import com.m_takahisa.taskapp.entity.TaskStatus;
 import com.m_takahisa.taskapp.entity.User;
@@ -11,9 +12,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import com.m_takahisa.taskapp.repository.NotificationRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller // @RestControllerではなく@Controllerを使う
 @RequestMapping("/view/tasks")
@@ -22,6 +23,7 @@ public class TaskViewController {
 
     private final TaskService taskService;
     private final UserService userService;
+    private final NotificationRepository notificationRepository;
 
     /**
      * 検索を行う
@@ -32,8 +34,15 @@ public class TaskViewController {
             @RequestParam(name = "status", required = false) TaskStatus status,
             Model model) {
 
+        // タスク一覧の取得
         List<Task> tasks = taskService.searchTasks(keyword, status);
+
+        // 未読通知の取得(本来はログインユーザーを渡しますが、現在は全未読通知を取得する)
+        List<Notification> unreadNotifications = notificationRepository.findByIsReadFalseOrderByCreatedAtDesc();
+
+        // Modelへの追加
         model.addAttribute("tasks", tasks);
+        model.addAttribute("unreadNotifications", unreadNotifications);
         model.addAttribute("keyword", keyword);
         model.addAttribute("selectedStatus", status); // 選択状態の保持用
         model.addAttribute("statusOptions", TaskStatus.values()); // セレクトボックスの選択肢
@@ -111,6 +120,20 @@ public class TaskViewController {
         existingTask.setCompleted(task.isCompleted());
 
         taskService.save(existingTask);
+        return "redirect:/view/tasks";
+    }
+
+    // 通知の既読処理
+    @PostMapping("/notifications/{id}/read")
+    public String markAsRead(@PathVariable Long id) {
+        Notification notification = notificationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("通知が見つかりません ID: " + id));
+
+        // 既読に設定して保存
+        notification.setRead(true);
+        notificationRepository.save(notification);
+
+        // 一覧画面にリダイレクト（これで通知が消える）
         return "redirect:/view/tasks";
     }
 }
