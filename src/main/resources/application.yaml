@@ -21,4 +21,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
   # 3. セキュリティ設定（開発中は一旦すべて許可する場合の設定例）
-  # ※本格的な実装は後のステップで行います
+  security:
+    user:
+      name: user
+      password: password
