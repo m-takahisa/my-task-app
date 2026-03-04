@@ -16,13 +16,16 @@ public class User {
     private Long id;
 
     @Column(columnDefinition = "VARCHAR(255)") //
-    private String name;
+    private String username;
 
     @Column(nullable = false, unique = true, columnDefinition = "VARCHAR(255)") //
     private String email;
 
     @Column(nullable = false, columnDefinition = "VARCHAR(255)") //
     private String password;
+
+    @Column(nullable = false)
+    private String role = "ROLE_USER"; //
 
     @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "TIMESTAMP") //
     private LocalDateTime createdAt;

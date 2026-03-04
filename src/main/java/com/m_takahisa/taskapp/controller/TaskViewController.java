@@ -1,5 +1,6 @@
 package com.m_takahisa.taskapp.controller;
 
+import com.m_takahisa.taskapp.auth.UserDetailsImpl;
 import com.m_takahisa.taskapp.entity.Notification;
 import com.m_takahisa.taskapp.entity.Task;
 import com.m_takahisa.taskapp.entity.TaskStatus;
@@ -7,6 +8,7 @@ import com.m_takahisa.taskapp.entity.User;
 import com.m_takahisa.taskapp.service.TaskService;
 import com.m_takahisa.taskapp.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -54,19 +56,18 @@ public class TaskViewController {
      * 登録画面を表示する
      */
     @PostMapping("/create")
-    public String createTask(@Validated @ModelAttribute Task task, BindingResult bindingResult) {
+    public String createTask(@Validated @ModelAttribute Task task, BindingResult bindingResult,
+                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         // 入力エラーがある場合は、登録画面に戻す
         if (bindingResult.hasErrors()) {
             return "tasks/create";
         }
 
-        // 本来はログインユーザーをセットしますが、一旦特定のユーザー(ID:1)に紐付けます
-        User user = userService.findById(1L)
-                .orElseThrow(() -> new RuntimeException("ユーザーが見つかりません"));
-         task.setUser(user);
+        // ログイン中のユーザーをセット
+        task.setUser(userDetails.getUser());
 
-        taskService.save(task); // Service経由でDB保存
-        return "redirect:/view/tasks"; // 保存後は一覧画面へリダイレクト
+        taskService.save(task);
+        return "redirect:/view/tasks";
     }
 
     /**

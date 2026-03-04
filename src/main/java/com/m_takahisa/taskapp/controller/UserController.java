@@ -30,7 +30,7 @@ public class UserController {
     @GetMapping("/test")
     public String createTestUser() {
         User user = new User();
-        user.setName("m_takahisa");
+        user.setUsername("m_takahisa");
         user.setEmail("admin@m_takahisa.com");
         user.setPassword("password123");
 
