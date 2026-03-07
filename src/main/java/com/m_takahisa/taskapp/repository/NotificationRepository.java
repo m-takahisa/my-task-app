@@ -15,4 +15,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
     // 特定のタスクIDに関連する未読通知が存在するかチェック
     boolean existsByTaskIdAndIsReadFalse(Long taskId);
+
+    // ログインユーザー宛の未読通知だけを取得する
+    List<Notification> findByUserAndIsReadFalse(User user);
 }
