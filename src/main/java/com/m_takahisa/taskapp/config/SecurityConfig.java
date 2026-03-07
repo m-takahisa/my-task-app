@@ -20,6 +20,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated() // それ以外はすべてログインが必要
                 )
                 .formLogin(form -> form
+                        .loginPage("/login") // 自作のログイン画面のパス
                         .defaultSuccessUrl("/view/tasks", true) // ログイン後の遷移先
                         .permitAll()
                 )
