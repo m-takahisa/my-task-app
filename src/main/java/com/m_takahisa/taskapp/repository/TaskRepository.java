@@ -2,6 +2,7 @@ package com.m_takahisa.taskapp.repository;
 
 import com.m_takahisa.taskapp.entity.Task;
 import com.m_takahisa.taskapp.entity.TaskStatus;
+import com.m_takahisa.taskapp.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -23,4 +24,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
      * 指定した日付以前（期限切れ含む）かつ、ステータスが完了(DONE)以外のタスクを取得
      */
     List<Task> findByDueDateLessThanEqualAndStatusNot(LocalDate date, TaskStatus status);
+
+    // ログインユーザーに紐づくタスクだけを取得する
+    List<Task> findByUserOrderByDueDateAsc(User user);
+
 }

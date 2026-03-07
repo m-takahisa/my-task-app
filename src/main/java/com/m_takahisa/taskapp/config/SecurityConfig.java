@@ -16,7 +16,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/css/**", "/js/**").permitAll() // 静的ファイルは全員許可
+                        .requestMatchers("/css/**", "/js/**", "/register").permitAll() // 静的ファイルは全員許可
                         .anyRequest().authenticated() // それ以外はすべてログインが必要
                 )
                 .formLogin(form -> form
@@ -33,6 +33,7 @@ public class SecurityConfig {
 
         return http.build();
     }
+
     // SecurityConfig.java 内に追加
     @Bean
     public PasswordEncoder passwordEncoder() {

@@ -3,10 +3,10 @@ package com.m_takahisa.taskapp.controller;
 import com.m_takahisa.taskapp.auth.UserDetailsImpl;
 import com.m_takahisa.taskapp.entity.Notification;
 import com.m_takahisa.taskapp.entity.Task;
-import com.m_takahisa.taskapp.entity.TaskStatus;
 import com.m_takahisa.taskapp.entity.User;
+import com.m_takahisa.taskapp.repository.NotificationRepository;
+import com.m_takahisa.taskapp.repository.TaskRepository;
 import com.m_takahisa.taskapp.service.TaskService;
-import com.m_takahisa.taskapp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -14,9 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import com.m_takahisa.taskapp.repository.NotificationRepository;
-
-import java.util.List;
 
 @Controller // @RestControllerではなく@Controllerを使う
 @RequestMapping("/view/tasks")
@@ -24,30 +21,23 @@ import java.util.List;
 public class TaskViewController {
 
     private final TaskService taskService;
-    private final UserService userService;
     private final NotificationRepository notificationRepository;
+    private final TaskRepository taskRepository;
 
     /**
      * 検索を行う
      */
     @GetMapping
     public String listTasks(
-            @RequestParam(name = "keyword", required = false) String keyword,
-            @RequestParam(name = "status", required = false) TaskStatus status,
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
             Model model) {
 
-        // タスク一覧の取得
-        List<Task> tasks = taskService.searchTasks(keyword, status);
+        // ログインユーザーを取得
+        User currentUser = userDetails.getUser();
 
-        // 未読通知の取得(本来はログインユーザーを渡しますが、現在は全未読通知を取得する)
-        List<Notification> unreadNotifications = notificationRepository.findByIsReadFalseOrderByCreatedAtDesc();
-
-        // Modelへの追加
-        model.addAttribute("tasks", tasks);
-        model.addAttribute("unreadNotifications", unreadNotifications);
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("selectedStatus", status); // 選択状態の保持用
-        model.addAttribute("statusOptions", TaskStatus.values()); // セレクトボックスの選択肢
+        // このユーザーのデータだけを各Repositoryから取得するように変更
+        model.addAttribute("tasks", taskRepository.findByUserOrderByDueDateAsc(currentUser));
+        model.addAttribute("notifications", notificationRepository.findByUserAndIsReadFalse(currentUser));
 
         return "tasks/list";
     }
@@ -66,7 +56,7 @@ public class TaskViewController {
         // ログイン中のユーザーをセット
         task.setUser(userDetails.getUser());
 
-        taskService.save(task);
+        taskService.save(task, userDetails.getUser());
         return "redirect:/view/tasks";
     }
 
@@ -103,7 +93,8 @@ public class TaskViewController {
      * タスクを更新する
      */
     @PostMapping("/{id}/update")
-    public String updateTask(@PathVariable Long id, @Validated @ModelAttribute Task task, BindingResult bindingResult) {
+    public String updateTask(@PathVariable Long id, @Validated @ModelAttribute Task task, BindingResult bindingResult,
+                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         // 入力エラーがある場合は、編集画面に戻す
         if (bindingResult.hasErrors()) {
             return "tasks/edit";
@@ -120,7 +111,7 @@ public class TaskViewController {
         existingTask.setStatus(task.getStatus());
         existingTask.setCompleted(task.isCompleted());
 
-        taskService.save(existingTask);
+        taskService.save(existingTask, userDetails.getUser());
         return "redirect:/view/tasks";
     }
 

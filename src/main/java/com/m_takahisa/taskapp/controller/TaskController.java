@@ -24,8 +24,8 @@ public class TaskController {
      * GET http://localhost:8085/tasks
      */
     @GetMapping
-    public List<Task> getAllTasks() {
-        return taskService.findAllTasks();
+    public List<Task> getAllTasks(User user) {
+        return taskService.findTasksByUser(user);
     }
 
     /**
