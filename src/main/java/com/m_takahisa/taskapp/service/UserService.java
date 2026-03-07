@@ -35,22 +35,6 @@ public class UserService {
      * 新しいユーザーを登録します
      */
     @Transactional
-    public User createUser(User user) {
-        // パスワードをハッシュ化（暗号化）してセット
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        // 権限を設定（デフォルトでROLE_USER）
-        if (user.getRole() == null) {
-            user.setRole("ROLE_USER");
-        }
-
-        return userRepository.save(user);
-    }
-
-    /**
-     * 新しいユーザーを登録します
-     */
-    @Transactional
     public void registerUser(User user) {
         // パスワードを暗号化
         user.setPassword(passwordEncoder.encode(user.getPassword()));
