@@ -9,19 +9,21 @@ COPY build.gradle.kts .
 COPY settings.gradle.kts .
 
 # 依存関係を先にダウンロード（キャッシュを利用するため）
-RUN ./gradlew dependencies
+# srcを変えてもここは再実行されない（ライブラリのダウンロードをスキップ）
+RUN ./gradlew dependencies --no-daemon
 
 # ソースコードをコピーしてビルド
 COPY src src
-RUN ./gradlew build -x test
+RUN ./gradlew build -x test --no-daemon
 
 # --- ステージ2: 実行環境 ---
 FROM amazoncorretto:21-alpine
 WORKDIR /app
 
 # ステージ1からビルド済みの JAR ファイルだけをコピー
-COPY --from=build /app/build/libs/*-SNAPSHOT.jar app.jar
+# Gradleでビルドするとプログラム（JARファイル）はbuild/libs/に出力される
+COPY --from=build /app/build/libs/*.jar app.jar
 
 # 実行
 ENTRYPOINT ["java", "-jar", "app.jar"]
-EXPOSE 8080
+EXPOSE 8085
