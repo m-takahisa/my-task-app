@@ -1,38 +1,35 @@
-package com.m_takahisa.taskapp.service;
+package com.m_takahisa.taskapp.auth;
 
-import com.m_takahisa.taskapp.entity.User;
-import com.m_takahisa.taskapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     /**
-     * 全ユーザーを取得します
+     * ユーザーを取得
      */
-    public List<User> findAllUsers() {
-        return userRepository.findAll();
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("ユーザー名が見つかりません: " + username));
+
+        // UserDetailsImplでラップして返す
+        return new UserDetailsImpl(user);
     }
 
     /**
-     * idでユーザーを検索します
-     */
-    public Optional<User> findById(Long id) {
-        return userRepository.findByid(id);
-    }
-
-    /**
-     * 新しいユーザーを登録します
+     * ユーザーを登録
      */
     @Transactional
     public void registerUser(User user) {
@@ -40,12 +37,5 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole("ROLE_USER");
         userRepository.save(user);
-    }
-
-    /**
-     * メールアドレスでユーザーを検索します
-     */
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
     }
 }

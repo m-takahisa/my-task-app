@@ -1,4 +1,4 @@
-package com.m_takahisa.taskapp.task;
+package com.m_takahisa.taskapp.task.notification;
 
 import com.m_takahisa.taskapp.auth.User;
 import org.springframework.data.jpa.repository.JpaRepository;

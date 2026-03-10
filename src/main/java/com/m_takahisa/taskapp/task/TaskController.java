@@ -2,6 +2,8 @@ package com.m_takahisa.taskapp.task;
 
 import com.m_takahisa.taskapp.auth.User;
 import com.m_takahisa.taskapp.auth.UserDetailsImpl;
+import com.m_takahisa.taskapp.task.notification.Notification;
+import com.m_takahisa.taskapp.task.notification.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -13,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller // @RestControllerではなく@Controllerを使う
 @RequestMapping("/view/tasks")
 @RequiredArgsConstructor
-public class TaskViewController {
+public class TaskController {
 
     private final TaskService taskService;
     private final NotificationRepository notificationRepository;

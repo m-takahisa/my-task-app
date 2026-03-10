@@ -4,8 +4,8 @@ server:
 spring:
   # 1. データベース接続設定
   datasource:
-    # url: jdbc:postgresql://localhost:5432/task_db
-    url: jdbc:postgresql://db:5432/task_db
+    #    url: jdbc:postgresql://db:5432/task_db
+    url: jdbc:postgresql://localhost:5432/task_db
     username: user
     password: password
     driver-class-name: org.postgresql.Driver

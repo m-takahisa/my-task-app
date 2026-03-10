@@ -1,9 +1,11 @@
-package com.m_takahisa.taskapp.entity;
+package com.m_takahisa.taskapp.task;
 
+import com.m_takahisa.taskapp.auth.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 

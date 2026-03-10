@@ -1,8 +1,6 @@
-package com.m_takahisa.taskapp.service;
+package com.m_takahisa.taskapp.task;
 
-import com.m_takahisa.taskapp.entity.Task;
-import com.m_takahisa.taskapp.entity.User;
-import com.m_takahisa.taskapp.repository.TaskRepository;
+import com.m_takahisa.taskapp.auth.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

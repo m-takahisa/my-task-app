@@ -1,4 +1,4 @@
-package com.m_takahisa.taskapp.entity;
+package com.m_takahisa.taskapp.task;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
