@@ -1,8 +1,6 @@
-package com.m_takahisa.taskapp.controller;
+package com.m_takahisa.taskapp.auth;
 
 
-import com.m_takahisa.taskapp.entity.User;
-import com.m_takahisa.taskapp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
