@@ -1,12 +1,7 @@
-package com.m_takahisa.taskapp.controller;
+package com.m_takahisa.taskapp.task;
 
+import com.m_takahisa.taskapp.auth.User;
 import com.m_takahisa.taskapp.auth.UserDetailsImpl;
-import com.m_takahisa.taskapp.entity.Notification;
-import com.m_takahisa.taskapp.entity.Task;
-import com.m_takahisa.taskapp.entity.User;
-import com.m_takahisa.taskapp.repository.NotificationRepository;
-import com.m_takahisa.taskapp.repository.TaskRepository;
-import com.m_takahisa.taskapp.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;

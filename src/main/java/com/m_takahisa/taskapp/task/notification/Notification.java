@@ -1,7 +1,9 @@
-package com.m_takahisa.taskapp.entity;
+package com.m_takahisa.taskapp.task;
 
+import com.m_takahisa.taskapp.auth.User;
 import jakarta.persistence.*;
 import lombok.Data;
+
 import java.time.LocalDateTime;
 
 @Entity

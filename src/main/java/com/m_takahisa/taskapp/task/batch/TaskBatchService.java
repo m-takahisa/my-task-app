@@ -1,10 +1,5 @@
-package com.m_takahisa.taskapp.service;
+package com.m_takahisa.taskapp.task;
 
-import com.m_takahisa.taskapp.entity.Notification;
-import com.m_takahisa.taskapp.entity.Task;
-import com.m_takahisa.taskapp.entity.TaskStatus;
-import com.m_takahisa.taskapp.repository.NotificationRepository;
-import com.m_takahisa.taskapp.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
