@@ -42,28 +42,26 @@ public class TaskController {
     /**
      * 登録画面を表示する
      */
+    @GetMapping("/new")
+    public String showCreateForm(Model model) {
+        model.addAttribute("task", new TaskRequest("", "", java.time.LocalDate.now(), TaskStatus.TODO, false));
+        return "tasks/create";
+    }
+
+    /**
+     * 保存処理を行う
+     */
     @PostMapping("/create")
-    public String createTask(@Validated @ModelAttribute Task task, BindingResult bindingResult,
+    public String createTask(@Validated @ModelAttribute("task") TaskRequest taskRequest,
+                             BindingResult bindingResult,
                              @AuthenticationPrincipal UserDetailsImpl userDetails) {
         // 入力エラーがある場合は、登録画面に戻す
         if (bindingResult.hasErrors()) {
             return "tasks/create";
         }
 
-        // ログイン中のユーザーをセット
-        task.setUser(userDetails.getUser());
-
-        taskService.save(task, userDetails.getUser());
+        taskService.save(taskRequest, userDetails.getUser());
         return "redirect:/view/tasks";
-    }
-
-    /**
-     * 保存処理を行う
-     */
-    @GetMapping("/new")
-    public String showCreateForm(Model model) {
-        model.addAttribute("task", new Task()); // 空のTaskオブジェクトをフォームに渡す
-        return "tasks/create"; // templates/tasks/create.html を表示
     }
 
     /**
@@ -82,33 +80,34 @@ public class TaskController {
     public String showEditForm(@PathVariable Long id, Model model) {
         Task task = taskService.findTaskById(id)
                 .orElseThrow(() -> new RuntimeException("タスクが見つかりません ID: " + id));
-        model.addAttribute("task", task);
-        return "tasks/edit"; // templates/tasks/edit.html を表示
+
+        TaskRequest taskRequest = new TaskRequest(
+                task.getTitle(),
+                task.getDescription(),
+                task.getDueDate(),
+                task.getStatus(),
+                task.isCompleted()
+        );
+
+        model.addAttribute("task", taskRequest);
+        model.addAttribute("taskId", id);
+        return "tasks/edit";
     }
 
     /**
      * タスクを更新する
      */
     @PostMapping("/{id}/update")
-    public String updateTask(@PathVariable Long id, @Validated @ModelAttribute Task task, BindingResult bindingResult,
-                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public String updateTask(
+            @PathVariable Long id,
+            @Validated @ModelAttribute("task") TaskRequest taskRequest,
+            BindingResult bindingResult) {
         // 入力エラーがある場合は、編集画面に戻す
         if (bindingResult.hasErrors()) {
             return "tasks/edit";
         }
 
-        // 既存のデータを取得して更新する（安全な実装方法）
-        Task existingTask = taskService.findTaskById(id)
-                .orElseThrow(() -> new RuntimeException("タスクが見つかりません ID: " + id));
-
-        // フォームから送られてきた内容で上書き
-        existingTask.setTitle(task.getTitle());
-        existingTask.setDescription(task.getDescription());
-        existingTask.setDueDate(task.getDueDate());
-        existingTask.setStatus(task.getStatus());
-        existingTask.setCompleted(task.isCompleted());
-
-        taskService.save(existingTask, userDetails.getUser());
+        taskService.update(id, taskRequest);
         return "redirect:/view/tasks";
     }
 

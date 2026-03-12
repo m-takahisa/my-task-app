@@ -22,26 +22,40 @@ public class TaskService {
     }
 
     /**
-     * Taskのみを受け取って保存するメソッド
-     * フォームから送信されたTaskオブジェクトをそのまま保存する場合に使用
+     * タスクの登録処理
      */
     @Transactional
-    public Task save(Task task, User user) {
+    public Task save(TaskRequest request, User user) {
+        Task task = new Task();
+        task.setTitle(request.title());
+        task.setDescription(request.description());
+        task.setDueDate(request.dueDate());
+        task.setStatus(request.status());
+        task.setCompleted(request.completed());
         task.setUser(user);
         return taskRepository.save(task);
     }
 
     /**
-     * ユーザーを紐付けて保存するメソッド
+     * タスクの更新処理
      */
     @Transactional
-    public Task createTask(Task task, User user) {
-        task.setUser(user); // タスクに所有者（ユーザー）を紐付ける
+    public Task update(Long id, TaskRequest request) {
+        // 既存データを取得（なければエラー）
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("タスクが見つかりません ID: " + id));
+
+        // DTOの内容でEntityを上書き
+        task.setTitle(request.title());
+        task.setDescription(request.description());
+        task.setDueDate(request.dueDate());
+        task.setStatus(request.status());
+        task.setCompleted(request.completed());
         return taskRepository.save(task);
     }
 
     /**
-     * 指定したIDのタスクを削除します
+     * タスクの削除処理
      */
     @Transactional
     public void deleteTask(Long id) {
@@ -49,7 +63,7 @@ public class TaskService {
     }
 
     /**
-     * 指定したIDのタスクを取得します
+     * タスクの取得処理
      */
     public Optional<Task> findTaskById(Long id) {
         return taskRepository.findById(id);

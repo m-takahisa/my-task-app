@@ -8,7 +8,7 @@
 <body class="container py-4">
 <h1 class="mb-4">タスク編集</h1>
 
-<form th:action="@{/view/tasks/{id}/update(id=${task.id})}" th:object="${task}" method="post" class="col-md-6">
+<form th:action="@{/view/tasks/{id}/update(id=${taskId})}" th:object="${task}" method="post" class="col-md-6">
     <div class="mb-3">
         <label for="title" class="form-label">タイトル</label>
         <input id="title" type="text" th:field="*{title}" class="form-control"
