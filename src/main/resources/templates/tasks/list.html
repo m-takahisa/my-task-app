@@ -27,7 +27,7 @@
 
             <select name="status" class="form-select">
                 <option value="">すべてのステータス</option>
-                <option th:each="s : ${statusOptions}"
+                <option th:each="s : ${T(com.m_takahisa.taskapp.task.TaskStatus).values()}"
                         th:value="${s}"
                         th:text="${s.displayName}"
                         th:selected="${s == selectedStatus}">

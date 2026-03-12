@@ -10,13 +10,13 @@ import java.util.List;
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
     // タイトル部分一致検索
-    List<Task> findByTitleContaining(String keyword);
+    List<Task> findByUserAndTitleContaining(User user, String keyword);
 
     // ステータスによる完全一致検索
-    List<Task> findByStatus(TaskStatus status);
+    List<Task> findByUserAndStatus(User user, TaskStatus status);
 
     // タイトルとステータスの組み合わせ検索
-    List<Task> findByTitleContainingAndStatus(String keyword, TaskStatus status);
+    List<Task> findByUserAndTitleContainingAndStatus(User user, String keyword, TaskStatus status);
 
     /**
      * 指定した日付以前（期限切れ含む）かつ、ステータスが完了(DONE)以外のタスクを取得

@@ -1,7 +1,9 @@
 package com.m_takahisa.taskapp.task;
 
 import com.m_takahisa.taskapp.auth.User;
+import com.m_takahisa.taskapp.auth.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,24 +17,52 @@ public class TaskService {
     private final TaskRepository taskRepository;
 
     /**
-     * ユーザー専用のタスク一覧取得
+     * ログインユーザーの取得
      */
-    public List<Task> findTasksByUser(User user) {
-        return taskRepository.findByUserOrderByDueDateAsc(user);
+    private User getAuthenticatedUser() {
+        UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+        return principal.getUser();
+    }
+
+    /**
+     * キーワード、ステータスに基づいてタスクを検索します
+     * どちらも指定がない場合は全件取得を返します
+     */
+    public List<Task> searchTasks(String keyword, TaskStatus status) {
+        boolean hasKeyword = (keyword != null && !keyword.isBlank());
+        boolean hasStatus = (status != null);
+
+        User user = getAuthenticatedUser();
+
+        if (hasKeyword) {
+            if (hasStatus) {
+                // キーワード ＋ ステータス絞り込み
+                return taskRepository.findByUserAndTitleContainingAndStatus(user, keyword, status);
+            }
+            // キーワードのみ（ステータスは「すべて」）
+            return taskRepository.findByUserAndTitleContaining(user, keyword);
+        } else if (hasStatus) {
+            // ステータス絞り込み
+            return taskRepository.findByUserAndStatus(user, status);
+        } else {
+            // どちらも指定がない場合
+            return taskRepository.findByUserOrderByDueDateAsc(user);
+        }
     }
 
     /**
      * タスクの登録処理
      */
     @Transactional
-    public Task save(TaskRequest request, User user) {
+    public Task save(TaskRequest request) {
         Task task = new Task();
         task.setTitle(request.title());
         task.setDescription(request.description());
         task.setDueDate(request.dueDate());
         task.setStatus(request.status());
         task.setCompleted(request.completed());
-        task.setUser(user);
+        task.setUser(getAuthenticatedUser());
         return taskRepository.save(task);
     }
 

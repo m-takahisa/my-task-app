@@ -26,15 +26,19 @@ public class TaskController {
      */
     @GetMapping
     public String listTasks(
+            @RequestParam(name = "keyword", required = false) String keyword,
+            @RequestParam(name = "status", required = false) TaskStatus status,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             Model model) {
 
         // ログインユーザーを取得
-        User currentUser = userDetails.getUser();
+        User user = userDetails.getUser();
 
-        // このユーザーのデータだけを各Repositoryから取得するように変更
-        model.addAttribute("tasks", taskRepository.findByUserOrderByDueDateAsc(currentUser));
-        model.addAttribute("notifications", notificationRepository.findByUserAndIsReadFalse(currentUser));
+        model.addAttribute("tasks", taskService.searchTasks(keyword, status));
+//        model.addAttribute("tasks", taskRepository.findByUserOrderByDueDateAsc(currentUser));
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("selectedStatus", status); // 選択状態を保持するために渡す
+        model.addAttribute("notifications", notificationRepository.findByUserAndIsReadFalse(user));
 
         return "tasks/list";
     }
@@ -60,7 +64,7 @@ public class TaskController {
             return "tasks/create";
         }
 
-        taskService.save(taskRequest, userDetails.getUser());
+        taskService.save(taskRequest);
         return "redirect:/view/tasks";
     }
 
@@ -101,9 +105,11 @@ public class TaskController {
     public String updateTask(
             @PathVariable Long id,
             @Validated @ModelAttribute("task") TaskRequest taskRequest,
-            BindingResult bindingResult) {
+            BindingResult bindingResult,
+            Model model) {
         // 入力エラーがある場合は、編集画面に戻す
         if (bindingResult.hasErrors()) {
+            model.addAttribute("taskId", id);
             return "tasks/edit";
         }
 
