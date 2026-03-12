@@ -2,6 +2,7 @@ package com.m_takahisa.taskapp.task;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
@@ -11,6 +12,7 @@ public record TaskRequest(
 
         String description,
 
+        @DateTimeFormat(pattern = "yyyy-MM-dd")
         @NotNull(message = "期限を設定してください")
         LocalDate dueDate,
 
