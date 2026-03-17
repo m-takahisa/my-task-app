@@ -11,15 +11,18 @@
     <form th:action="@{/register}" th:object="${user}" method="post">
         <div>
             <label>ユーザー名:</label>
-            <input type="text" th:field="*{username}" required/>
+            <input type="text" th:field="*{username}"/>
+            <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}" style="color: red;"></span>
         </div>
         <div>
             <label>メールアドレス:</label>
-            <input type="email" th:field="*{email}" required/>
+            <input type="email" th:field="*{email}"/>
+            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color: red;"></span>
         </div>
         <div>
             <label>パスワード:</label>
-            <input type="password" th:field="*{password}" required/>
+            <input type="password" th:field="*{password}"/>
+            <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color: red;"></span>
         </div>
         <div>
             <button type="submit">登録する</button>

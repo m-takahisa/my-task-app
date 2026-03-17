@@ -5,15 +5,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public record UserRegistrationRequest(
-        @NotBlank(message = "ユーザー名は必須です")
+        @Size(min = 1, max = 20, message = "{validation.size.min_max}")
         String username,
 
-        @NotBlank(message = "メールアドレスは必須です")
-        @Email(message = "有効なメールアドレスを入力してください")
+        @NotBlank(message = "{validation.not_blank}")
+        @Email(message = "{validation.email.invalid}")
         String email,
 
-        @NotBlank(message = "パスワードは必須です")
-        @Size(min = 8, message = "パスワードは8文字以上で入力してください")
+        @Size(min = 8, max = 20, message = "{validation.size.min_max}")
         String password
 ) {
 }
