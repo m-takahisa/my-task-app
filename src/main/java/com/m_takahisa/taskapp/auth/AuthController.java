@@ -4,6 +4,8 @@ package com.m_takahisa.taskapp.auth;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +20,7 @@ public class AuthController {
      */
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
-        model.addAttribute("user", new User());
+        model.addAttribute("user", new UserRegistrationRequest("", "", ""));
         return "auth/register";
     }
 
@@ -27,9 +29,15 @@ public class AuthController {
      * ログイン画面への遷移
      */
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute User user) {
-        userService.registerUser(user);
-        return "redirect:/login"; // 登録後はログイン画面へ
+    public String registerUser(@Validated @ModelAttribute("user") UserRegistrationRequest request,
+                               BindingResult bindingResult) {
+        // 入力エラーがある場合は、登録画面に戻す
+        if (bindingResult.hasErrors()) {
+            return "auth/register";
+        }
+
+        userService.registerUser(request);
+        return "redirect:/login";
     }
 
     /**

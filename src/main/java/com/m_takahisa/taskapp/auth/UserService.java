@@ -32,9 +32,12 @@ public class UserService implements UserDetailsService {
      * ユーザーを登録
      */
     @Transactional
-    public void registerUser(User user) {
+    public void registerUser(UserRegistrationRequest request) {
+        User user = new User();
+        user.setUsername(request.username());
+        user.setEmail(request.email());
         // パスワードを暗号化
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(request.password()));
         user.setRole("ROLE_USER");
         userRepository.save(user);
     }
