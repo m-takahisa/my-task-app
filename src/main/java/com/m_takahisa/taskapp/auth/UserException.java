@@ -1,21 +1,22 @@
 package com.m_takahisa.taskapp.auth;
 
 public class UserException extends RuntimeException {
-    public UserException(String message) {
+    private final Object data;
+
+    // 親クラスのコンストラクタ
+    public UserException(String message, Object data) {
         super(message);
+        this.data = data;
+    }
+
+    public Object getData() {
+        return data;
     }
 
     // 重複エラー用のインナークラス
     public static class AlreadyExistsException extends UserException {
-        public AlreadyExistsException(String message) {
-            super(message);
+        public AlreadyExistsException(Object data) {
+            super("User already exists", data);
         }
     }
-
-//    // 認証エラー用のインナークラス
-//    public static class UnauthorizedException extends UserException {
-//        public UnauthorizedException(String message) {
-//            super(message);
-//        }
-//    }
 }

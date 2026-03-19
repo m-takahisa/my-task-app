@@ -9,8 +9,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Locale;
-
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
@@ -36,13 +34,12 @@ public class UserService implements UserDetailsService {
      * ユーザーを登録
      */
     @Transactional
-    public void registerUser(UserRegistrationRequest request, Locale locale) {
+    public void registerUser(UserRegistrationRequest request) {
         // メールアドレスの重複チェック
-        String getMessage = messageSource.getMessage("user.register.generic_error", null, locale);
         if (userRepository.findByEmail(request.email()).isPresent()) {
-            throw new UserException.AlreadyExistsException(getMessage);
+            throw new UserException.AlreadyExistsException(request);
         }
-
+        // ユーザー登録処理
         User user = new User();
         user.setUsername(request.username());
         user.setEmail(request.email());

@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.Locale;
-
 @Controller
 @RequiredArgsConstructor
 public class AuthController {
@@ -34,31 +32,13 @@ public class AuthController {
      */
     @PostMapping("/register")
     public String registerUser(@Validated @ModelAttribute("user") UserRegistrationRequest request,
-                               BindingResult bindingResult,
-                               Locale locale) {
+                               BindingResult bindingResult) {
         // 入力エラーがある場合は、登録画面に戻す
         if (bindingResult.hasErrors()) {
             return "auth/register";
         }
 
-        try {
-            userService.registerUser(request, locale);
-        } catch (UserException.AlreadyExistsException e) {
-            // メールアドレスの重複エラーの場合
-            String errorMessage = messageSource.getMessage(
-                    "user.register.duplicate_field",
-                    new Object[]{"メールアドレス", request.email()},
-                    locale
-            );
-            bindingResult.rejectValue("email", "error.user", errorMessage);
-            return "auth/register";
-        } catch (UserException e) {
-            // それ以外のUser関連エラー
-            String genericMessage = messageSource.getMessage("user.register.generic_error", null, locale);
-            bindingResult.reject("error.user", genericMessage);
-            return "auth/register";
-        }
-
+        userService.registerUser(request);
         return "redirect:/login";
     }
 
