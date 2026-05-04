@@ -29,13 +29,9 @@ public class SecurityConfig {
                         .permitAll()
                 );
 
-        // BCryptPasswordEncoder を使って "password" をハッシュ化(動作確認用)
-        System.out.println(new BCryptPasswordEncoder().encode("password"));
-
         return http.build();
     }
-
-    // SecurityConfig.java 内に追加
+    
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(); // これで「BCrypt形式で照合する」と設定される

@@ -1,9 +1,9 @@
 package com.m_takahisa.taskapp.auth;
 
-import com.m_takahisa.taskapp.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -17,10 +17,14 @@ public class UserDetailsImpl implements UserDetails {
 
     // 認証で使うパスワードとユーザー名はエンティティから取得
     @Override
-    public String getPassword() { return user.getPassword(); }
+    public String getPassword() {
+        return user.getPassword();
+    }
 
     @Override
-    public String getUsername() { return user.getUsername(); }
+    public String getUsername() {
+        return user.getUsername();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -28,10 +32,27 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     // 元のUserエンティティを取り出したい時のためのメソッド
-    public User getUser() { return user; }
+    public User getUser() {
+        return user;
+    }
 
-    @Override public boolean isAccountNonExpired() { return true; }
-    @Override public boolean isAccountNonLocked() { return true; }
-    @Override public boolean isCredentialsNonExpired() { return true; }
-    @Override public boolean isEnabled() { return true; }
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }
