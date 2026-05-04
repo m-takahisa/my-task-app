@@ -2,19 +2,42 @@ package com.m_takahisa.taskapp.task;
 
 import com.m_takahisa.taskapp.auth.User;
 import com.m_takahisa.taskapp.auth.UserDetailsImpl;
+import com.m_takahisa.taskapp.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class TaskService {
 
     private final TaskRepository taskRepository;
+
+    public TaskListResponse getTaskListData(String keyword, TaskStatus status) {
+        List<TaskResponse> tasks = searchTasks(keyword, status);
+        // 画面に必要な情報を1つのレコードにまとめる
+        return new TaskListResponse(tasks, keyword, status);
+    }
+
+    // まとめるためのRecord
+    public record TaskListResponse(
+            List<TaskResponse> tasks,
+            String keyword,
+            TaskStatus status
+    ) {
+    }
+
+    /**
+     * タスクの取得処理
+     */
+    public TaskRequest getTaskRequestById(Long id) {
+        return taskRepository.findById(id)
+                .map(TaskRequest::fromEntity)
+                .orElseThrow(() -> new ResourceNotFoundException("指定されたタスク（ID: " + id + "）は見つかりません。"));
+    }
 
     /**
      * ログインユーザーの取得
@@ -29,26 +52,32 @@ public class TaskService {
      * キーワード、ステータスに基づいてタスクを検索します
      * どちらも指定がない場合は全件取得を返します
      */
-    public List<Task> searchTasks(String keyword, TaskStatus status) {
+    public List<TaskResponse> searchTasks(String keyword, TaskStatus status) {
         boolean hasKeyword = (keyword != null && !keyword.isBlank());
         boolean hasStatus = (status != null);
 
         User user = getAuthenticatedUser();
+        List<Task> tasks;
 
         if (hasKeyword) {
             if (hasStatus) {
                 // キーワード ＋ ステータス絞り込み
-                return taskRepository.findByUserAndTitleContainingAndStatus(user, keyword, status);
+                tasks = taskRepository.findByUserAndTitleContainingAndStatus(user, keyword, status);
+            } else {
+                // キーワードのみ（ステータスは「すべて」）
+                tasks = taskRepository.findByUserAndTitleContaining(user, keyword);
             }
-            // キーワードのみ（ステータスは「すべて」）
-            return taskRepository.findByUserAndTitleContaining(user, keyword);
         } else if (hasStatus) {
             // ステータス絞り込み
-            return taskRepository.findByUserAndStatus(user, status);
+            tasks = taskRepository.findByUserAndStatus(user, status);
         } else {
             // どちらも指定がない場合
-            return taskRepository.findByUserOrderByDueDateAsc(user);
+            tasks = taskRepository.findByUserOrderByDueDateAsc(user);
         }
+        // Entity のリストを TaskResponse のリストに変換して返す
+        return tasks.stream()
+                .map(TaskResponse::fromEntity)
+                .toList();
     }
 
     /**
@@ -90,13 +119,6 @@ public class TaskService {
     @Transactional
     public void deleteTask(Long id) {
         taskRepository.deleteById(id);
-    }
-
-    /**
-     * タスクの取得処理
-     */
-    public Optional<Task> findTaskById(Long id) {
-        return taskRepository.findById(id);
     }
 
 }

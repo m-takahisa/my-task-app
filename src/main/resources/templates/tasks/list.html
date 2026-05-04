@@ -22,7 +22,7 @@
 <div class="row mb-4">
     <div class="col-md-6">
         <form th:action="@{/view/tasks}" method="get" class="d-flex gap-2">
-            <input type="text" name="keyword" th:value="${keyword}"
+            <input type="text" name="keyword" th:value="${displayData.keyword}"
                    class="form-control" placeholder="タイトルで検索...">
 
             <select name="status" class="form-select">
@@ -30,7 +30,7 @@
                 <option th:each="s : ${T(com.m_takahisa.taskapp.task.TaskStatus).values()}"
                         th:value="${s}"
                         th:text="${s.displayName}"
-                        th:selected="${s == selectedStatus}">
+                        th:selected="${s == displayData.status}">
                 </option>
             </select>
 
@@ -63,7 +63,6 @@
 <table class="table table-striped table-hover">
     <thead class="table-dark">
     <tr>
-        <th>ID</th>
         <th>タイトル</th>
         <th>ステータス</th>
         <th>期限</th>
@@ -72,11 +71,10 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="task : ${tasks}">
-        <td th:text="${task.id}">1</td>
+    <tr th:each="task : ${displayData.tasks}">
         <td th:text="${task.title}">タイトル</td>
         <td>
-            <span class="badge bg-info text-dark" th:text="${task.status}">TODO</span>
+            <span class="badge bg-info text-dark" th:text="${task.statusDisplayName}">未完了</span>
         </td>
         <td th:text="${task.dueDate}">2026-01-01</td>
         <td>
@@ -97,7 +95,7 @@
     </tbody>
 </table>
 
-<div th:if="${#lists.isEmpty(tasks)}" class="alert alert-warning">
+<div th:if="${#lists.isEmpty(displayData.tasks)}" class="alert alert-warning">
     タスクが登録されていません。
 </div>
 </body>

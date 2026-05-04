@@ -8,7 +8,9 @@
 <body class="container py-4">
 <h1 class="mb-4">タスク編集</h1>
 
-<form th:action="@{/view/tasks/{id}/update(id=${taskId})}" th:object="${task}" method="post" class="col-md-6">
+<form th:action="@{/view/tasks/{id}/update(id=*{id})}" th:object="${task}" method="post" class="col-md-6">
+    <!-- IDは画面に出さず、内部的に送信する -->
+    <input type="hidden" th:field="*{id}">
     <div class="mb-3">
         <label for="title" class="form-label">タイトル</label>
         <input id="title" type="text" th:field="*{title}" class="form-control"
@@ -28,9 +30,9 @@
     <div class="mb-3">
         <label for="status" class="form-label">ステータス</label>
         <select th:field="*{status}" class="form-select" id="status">
-            <option value="TODO">TODO</option>
-            <option value="DOING">DOING</option>
-            <option value="DONE">DONE</option>
+            <option value="TODO">未完了</option>
+            <option value="DOING">進行中</option>
+            <option value="DONE">完了</option>
         </select>
     </div>
     <div class="mb-3 form-check">

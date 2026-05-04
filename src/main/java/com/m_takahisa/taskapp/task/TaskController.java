@@ -1,11 +1,7 @@
 package com.m_takahisa.taskapp.task;
 
-import com.m_takahisa.taskapp.auth.User;
-import com.m_takahisa.taskapp.auth.UserDetailsImpl;
-import com.m_takahisa.taskapp.task.notification.Notification;
-import com.m_takahisa.taskapp.task.notification.NotificationRepository;
+import com.m_takahisa.taskapp.task.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,8 +14,7 @@ import org.springframework.web.bind.annotation.*;
 public class TaskController {
 
     private final TaskService taskService;
-    private final NotificationRepository notificationRepository;
-    private final TaskRepository taskRepository;
+    private final NotificationService notificationService;
 
     /**
      * 検索を行う
@@ -28,18 +23,10 @@ public class TaskController {
     public String listTasks(
             @RequestParam(name = "keyword", required = false) String keyword,
             @RequestParam(name = "status", required = false) TaskStatus status,
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
             Model model) {
 
-        // ログインユーザーを取得
-        User user = userDetails.getUser();
-
-        model.addAttribute("tasks", taskService.searchTasks(keyword, status));
-//        model.addAttribute("tasks", taskRepository.findByUserOrderByDueDateAsc(currentUser));
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("selectedStatus", status); // 選択状態を保持するために渡す
-        model.addAttribute("notifications", notificationRepository.findByUserAndIsReadFalse(user));
-
+        var response = taskService.getTaskListData(keyword, status);
+        model.addAttribute("displayData", response);
         return "tasks/list";
     }
 
@@ -48,7 +35,7 @@ public class TaskController {
      */
     @GetMapping("/new")
     public String showCreateForm(Model model) {
-        model.addAttribute("task", new TaskRequest("", "", java.time.LocalDate.now(), TaskStatus.TODO, false));
+        model.addAttribute("task", new TaskRequest(null, "", "", java.time.LocalDate.now(), TaskStatus.TODO, false));
         return "tasks/create";
     }
 
@@ -57,8 +44,7 @@ public class TaskController {
      */
     @PostMapping("/create")
     public String createTask(@Validated @ModelAttribute("task") TaskRequest taskRequest,
-                             BindingResult bindingResult,
-                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
+                             BindingResult bindingResult) {
         // 入力エラーがある場合は、登録画面に戻す
         if (bindingResult.hasErrors()) {
             return "tasks/create";
@@ -82,18 +68,7 @@ public class TaskController {
      */
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable Long id, Model model) {
-        Task task = taskService.findTaskById(id)
-                .orElseThrow(() -> new RuntimeException("タスクが見つかりません ID: " + id));
-
-        TaskRequest taskRequest = new TaskRequest(
-                task.getTitle(),
-                task.getDescription(),
-                task.getDueDate(),
-                task.getStatus(),
-                task.isCompleted()
-        );
-
-        model.addAttribute("task", taskRequest);
+        model.addAttribute("task", taskService.getTaskRequestById(id));
         model.addAttribute("taskId", id);
         return "tasks/edit";
     }
@@ -120,14 +95,7 @@ public class TaskController {
     // 通知の既読処理
     @PostMapping("/notifications/{id}/read")
     public String markAsRead(@PathVariable Long id) {
-        Notification notification = notificationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("通知が見つかりません ID: " + id));
-
-        // 既読に設定して保存
-        notification.setRead(true);
-        notificationRepository.save(notification);
-
-        // 一覧画面にリダイレクト（これで通知が消える）
+        notificationService.markAsRead(id);
         return "redirect:/view/tasks";
     }
 }

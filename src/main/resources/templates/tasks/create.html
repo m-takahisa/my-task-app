@@ -9,6 +9,8 @@
 <h1 class="mb-4">タスク新規登録</h1>
 
 <form th:action="@{/view/tasks/create}" th:object="${task}" method="post" class="col-md-6">
+    <!-- 追加：新規登録時は値が空のまま送信される -->
+    <input type="hidden" th:field="*{id}">
     <div class="mb-3">
         <label for="title" class="form-label">タイトル</label>
         <input id="title" type="text" th:field="*{title}" class="form-control"

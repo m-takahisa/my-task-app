@@ -36,4 +36,13 @@ public class GlobalExceptionHandler {
 
         return "auth/register";
     }
+
+    /**
+     * 通知関連で例外が発生した際の処理
+     */
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public String handleResourceNotFoundException(ResourceNotFoundException e, Model model) {
+        model.addAttribute("errorMessage", e.getMessage());
+        return "error/404"; // あるいは共通のエラー画面
+    }
 }
