@@ -30,9 +30,9 @@
     <div class="mb-3">
         <label for="status" class="form-label">ステータス</label>
         <select th:field="*{status}" class="form-select" id="status">
-            <option value="TODO">未完了</option>
-            <option value="DOING">進行中</option>
-            <option value="DONE">完了</option>
+            <option value="TODO" th:text="#{todo}"></option>
+            <option value="DOING" th:text="#{doing}"></option>
+            <option value="DONE" th:text="#{done}"></option>
         </select>
     </div>
     <div class="mb-3 form-check">
