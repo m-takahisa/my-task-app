@@ -24,7 +24,11 @@
         <textarea th:field="*{description}" class="form-control" id="description" rows="3"></textarea>
     </div>
     <div class="mb-3">
-        <label for="dueDate" class="form-label">期限</label>
+        <label for="startDate" class="form-label">開始日</label>
+        <input type="date" th:field="*{startDate}" class="form-control" id="startDate">
+    </div>
+    <div class="mb-3">
+        <label for="dueDate" class="form-label">期限日</label>
         <input type="date" th:field="*{dueDate}" class="form-control" id="dueDate">
     </div>
     <div class="mb-3">

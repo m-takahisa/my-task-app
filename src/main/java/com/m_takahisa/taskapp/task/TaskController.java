@@ -35,7 +35,18 @@ public class TaskController {
      */
     @GetMapping("/new")
     public String showCreateForm(Model model) {
-        model.addAttribute("task", new TaskRequest(null, "", "", java.time.LocalDate.now(), TaskStatus.TODO, false));
+        model.addAttribute(
+                "task",
+                new TaskRequest(
+                        null,
+                        "",
+                        "",
+                        java.time.LocalDate.now(),
+                        java.time.LocalDate.now(),
+                        TaskStatus.TODO,
+                        false
+                )
+        );
         return "tasks/create";
     }
 

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,6 +23,7 @@ public class Task {
     // Userとの「多対一」のリレーション設定
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, columnDefinition = "BIGINT") //
+    @ToString.Exclude // デバック時のエラー対策（動作には影響しない）
     private User user;
 
     @NotBlank(message = "タイトルは必須です")
@@ -32,6 +34,9 @@ public class Task {
     @Size(max = 500, message = "説明は500文字以内で入力してください")
     @Column(columnDefinition = "TEXT") //
     private String description;
+
+    @Column(name = "start_date", columnDefinition = "DATE") //
+    private LocalDate startDate;
 
     @Column(name = "due_date", columnDefinition = "DATE") //
     private LocalDate dueDate;

@@ -73,9 +73,12 @@
     <tr>
         <th>タイトル</th>
         <th>ステータス</th>
-        <th>期限</th>
+        <th>開始日</th>
+        <th>期限日</th>
         <th>完了</th>
         <th>操作</th>
+        <th>作成日時</th>
+        <th>更新日時</th>
     </tr>
     </thead>
     <tbody>
@@ -84,11 +87,14 @@
         <td>
             <span class="badge bg-info text-dark" th:text="${task.statusDisplayName}"></span>
         </td>
+        <td th:text="${task.startDate}"></td>
         <td th:text="${task.dueDate}"></td>
         <td>
             <span th:if="${task.completed}" class="text-success" th:text="#{completed}"></span>
             <span th:unless="${task.completed}" class="text-secondary" th:text="#{incomplete}"></span>
         </td>
+        <td th:text="${#temporals.format(task.createdAt, 'yyyy/MM/dd HH:mm')}"></td>
+        <td th:text="${#temporals.format(task.updatedAt, 'yyyy/MM/dd HH:mm')}"></td>
         <td>
             <div class="d-flex gap-2">
                 <a th:href="@{/view/tasks/{id}/edit(id=${task.id})}" class="btn btn-outline-primary btn-sm">編集</a>

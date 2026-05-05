@@ -88,6 +88,7 @@ public class TaskService {
         Task task = new Task();
         task.setTitle(request.title());
         task.setDescription(request.description());
+        task.setStartDate(request.startDate());
         task.setDueDate(request.dueDate());
         task.setStatus(request.status());
         task.setCompleted(request.completed());
@@ -107,6 +108,7 @@ public class TaskService {
         // DTOの内容でEntityを上書き
         task.setTitle(request.title());
         task.setDescription(request.description());
+        task.setStartDate(request.startDate());
         task.setDueDate(request.dueDate());
         task.setStatus(request.status());
         task.setCompleted(request.completed());
