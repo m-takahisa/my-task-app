@@ -9,7 +9,7 @@
 <h1 class="mb-4">タスク新規登録</h1>
 
 <form th:action="@{/view/tasks/create}" th:object="${task}" method="post" class="col-md-6">
-    <!-- 追加：新規登録時は値が空のまま送信される -->
+    <!-- 新規登録時は"id","ステータス","完了項目"は非表示でデフォルト値を送信 -->
     <input type="hidden" th:field="*{id}">
     <div class="mb-3">
         <label for="title" class="form-label">タイトル</label>
@@ -31,14 +31,7 @@
         <label for="dueDate" class="form-label">期限日</label>
         <input type="date" th:field="*{dueDate}" class="form-control" id="dueDate">
     </div>
-    <div class="mb-3">
-        <label for="status" class="form-label">ステータス</label>
-        <select th:field="*{status}" class="form-select" id="status">
-            <option value="TODO" th:text="#{todo}"></option>
-            <option value="DOING" th:text="#{doing}"></option>
-            <option value="DONE" th:text="#{done}"></option>
-        </select>
-    </div>
+    <input type="hidden" th:name="status" value="TODO">
     <input type="hidden" name="completed" value="false"/>
     <button type="submit" class="btn btn-primary">登録する</button>
     <a th:href="@{/view/tasks}" class="btn btn-outline-secondary">キャンセル</a>

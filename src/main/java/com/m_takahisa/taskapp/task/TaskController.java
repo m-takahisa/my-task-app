@@ -1,6 +1,7 @@
 package com.m_takahisa.taskapp.task;
 
 import com.m_takahisa.taskapp.task.notification.NotificationService;
+import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,8 +42,8 @@ public class TaskController {
                         null,
                         "",
                         "",
-                        java.time.LocalDate.now(),
-                        java.time.LocalDate.now(),
+                        null,
+                        null,
                         TaskStatus.TODO,
                         false
                 )
@@ -54,7 +55,7 @@ public class TaskController {
      * 保存処理を行う
      */
     @PostMapping("/create")
-    public String createTask(@Validated @ModelAttribute("task") TaskRequest taskRequest,
+    public String createTask(@Validated(Default.class) @ModelAttribute("task") TaskRequest taskRequest,
                              BindingResult bindingResult) {
         // 入力エラーがある場合は、登録画面に戻す
         if (bindingResult.hasErrors()) {
@@ -90,7 +91,7 @@ public class TaskController {
     @PostMapping("/{id}/update")
     public String updateTask(
             @PathVariable Long id,
-            @Validated @ModelAttribute("task") TaskRequest taskRequest,
+            @Validated({Default.class, OnUpdate.class}) @ModelAttribute("task") TaskRequest taskRequest,
             BindingResult bindingResult,
             Model model) {
         // 入力エラーがある場合は、編集画面に戻す

@@ -90,7 +90,8 @@ public class TaskService {
         task.setDescription(request.description());
         task.setStartDate(request.startDate());
         task.setDueDate(request.dueDate());
-        task.setStatus(request.status());
+        // 期限日が設定されていればDOING、設定されてなければTODOをセット
+        task.setStatus(request.dueDate() != null ? TaskStatus.DOING : TaskStatus.TODO);
         task.setCompleted(request.completed());
         task.setUser(getAuthenticatedUser());
         return taskRepository.save(task);

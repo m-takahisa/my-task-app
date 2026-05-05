@@ -9,6 +9,14 @@
 <h1 class="mb-4">タスク編集</h1>
 
 <form th:action="@{/view/tasks/{id}/update(id=*{id})}" th:object="${task}" method="post" class="col-md-6">
+    <!-- 特定の相関チェックエラーのみ表示 -->
+    <div th:if="${#fields.hasErrors('statusDoneValid') or #fields.hasErrors('dateOrderValid')}"
+         class="alert alert-danger">
+        <ul class="mb-0">
+            <li th:if="${#fields.hasErrors('statusDoneValid')}" th:errors="*{statusDoneValid}"></li>
+            <li th:if="${#fields.hasErrors('dateOrderValid')}" th:errors="*{dateOrderValid}"></li>
+        </ul>
+    </div>
     <!-- IDは画面に出さず、内部的に送信する -->
     <input type="hidden" th:field="*{id}">
     <div class="mb-3">
@@ -37,6 +45,7 @@
             <option value="TODO" th:text="#{todo}"></option>
             <option value="DOING" th:text="#{doing}"></option>
             <option value="DONE" th:text="#{done}"></option>
+            <option value="PENDING" th:text="#{pending}"></option>
         </select>
     </div>
     <div class="mb-3 form-check">

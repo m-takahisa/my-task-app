@@ -4,6 +4,7 @@ import com.m_takahisa.taskapp.auth.User;
 import com.m_takahisa.taskapp.task.notification.Notification;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.ToString;
@@ -47,6 +48,7 @@ public class Task {
     @Column(name = "due_date", columnDefinition = "DATE") //
     private LocalDate dueDate;
 
+    @NotNull(groups = OnUpdate.class)
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private TaskStatus status = TaskStatus.TODO;
