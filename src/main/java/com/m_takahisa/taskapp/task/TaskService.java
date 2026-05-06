@@ -87,6 +87,7 @@ public class TaskService {
     public Task save(TaskRequest request) {
         Task task = new Task();
         task.setTitle(request.title());
+        task.setPriority(request.priority());
         task.setDescription(request.description());
         task.setStartDate(request.startDate());
         task.setDueDate(request.dueDate());
@@ -111,6 +112,7 @@ public class TaskService {
         task.setDescription(request.description());
         task.setStartDate(request.startDate());
         task.setDueDate(request.dueDate());
+        task.setPriority(request.priority());
         task.setStatus(request.status());
         task.setCompleted(request.completed());
         return taskRepository.save(task);

@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 public record TaskResponse(
         Long id,
         String title,
+        TaskPriority priority,
+        String priorityDisplayName,
         String description,
         LocalDate startDate,
         LocalDate dueDate,
@@ -19,6 +21,8 @@ public record TaskResponse(
         return new TaskResponse(
                 task.getId(),
                 task.getTitle(),
+                task.getPriority(),
+                task.getPriority().getDisplayName(),
                 task.getDescription(),
                 task.getStartDate(),
                 task.getDueDate(),

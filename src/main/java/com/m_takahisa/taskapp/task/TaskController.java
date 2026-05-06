@@ -41,7 +41,8 @@ public class TaskController {
                 new TaskRequest(
                         null,
                         "",
-                        "",
+                        TaskPriority.LOW,
+                        null,
                         null,
                         null,
                         TaskStatus.TODO,
@@ -55,7 +56,7 @@ public class TaskController {
      * 保存処理を行う
      */
     @PostMapping("/create")
-    public String createTask(@Validated(Default.class) @ModelAttribute("task") TaskRequest taskRequest,
+    public String createTask(@Validated @ModelAttribute("task") TaskRequest taskRequest,
                              BindingResult bindingResult) {
         // 入力エラーがある場合は、登録画面に戻す
         if (bindingResult.hasErrors()) {

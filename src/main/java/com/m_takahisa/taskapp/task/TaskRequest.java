@@ -13,6 +13,8 @@ public record TaskRequest(
         @NotBlank(message = "{validation.not_blank}")
         @Size(max = 100, message = "{validation.size.max}")
         String title,
+        @NotNull(message = "{validation.not_blank}")
+        TaskPriority priority,
         @Size(max = 500, message = "{validation.size.max}")
         String description,
         @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -20,7 +22,7 @@ public record TaskRequest(
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         LocalDate dueDate,
         // 更新時のみ NotNull チェック
-        @NotNull(groups = OnUpdate.class)
+        @NotNull(groups = OnUpdate.class, message = "{validation.not_select}")
         TaskStatus status,
         boolean completed
 
@@ -30,6 +32,7 @@ public record TaskRequest(
         return new TaskRequest(
                 task.getId(),
                 task.getTitle(),
+                task.getPriority(),
                 task.getDescription(),
                 task.getStartDate(),
                 task.getDueDate(),

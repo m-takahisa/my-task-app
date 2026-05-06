@@ -33,12 +33,17 @@ public class Task {
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Notification> notifications;
 
-    @NotBlank(message = "タイトルは必須です")
-    @Size(max = 100, message = "タイトルは100文字以内で入力してください")
+    @NotBlank(message = "{validation.not_blank}")
+    @Size(max = 100, message = "{validation.size.max}")
     @Column(nullable = false, length = 100, columnDefinition = "VARCHAR(100)") //
     private String title;
 
-    @Size(max = 500, message = "説明は500文字以内で入力してください")
+    @NotNull(message = "{validation.not_blank}")
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private TaskPriority priority;
+
+    @Size(max = 500, message = "{validation.size.max}")
     @Column(columnDefinition = "TEXT") //
     private String description;
 
@@ -48,7 +53,7 @@ public class Task {
     @Column(name = "due_date", columnDefinition = "DATE") //
     private LocalDate dueDate;
 
-    @NotNull(groups = OnUpdate.class)
+    @NotNull(groups = OnUpdate.class, message = "{validation.not_select}")
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private TaskStatus status = TaskStatus.TODO;

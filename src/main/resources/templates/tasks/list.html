@@ -72,6 +72,7 @@
     <thead class="table-dark">
     <tr>
         <th>タイトル</th>
+        <th>優先度</th>
         <th>ステータス</th>
         <th>開始日</th>
         <th>期限日</th>
@@ -84,6 +85,9 @@
     <tbody>
     <tr th:each="task : ${displayData.tasks}">
         <td th:text="${task.title}"></td>
+        <td>
+            <span class="badge bg-info text-dark" th:text="${task.priorityDisplayName}"></span>
+        </td>
         <td>
             <span class="badge bg-info text-dark" th:text="${task.statusDisplayName}"></span>
         </td>

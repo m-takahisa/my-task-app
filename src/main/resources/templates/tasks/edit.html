@@ -40,6 +40,15 @@
         <input type="date" th:field="*{dueDate}" class="form-control" id="dueDate">
     </div>
     <div class="mb-3">
+        <label for="priority" class="form-label">優先度</label>
+        <select th:field="*{priority}" class="form-select" id="priority">
+            <option value="CRITICAL" th:text="#{critical}"></option>
+            <option value="HIGH" th:text="#{high}"></option>
+            <option value="MEDIUM" th:text="#{medium}"></option>
+            <option value="LOW" th:text="#{low}"></option>
+        </select>
+    </div>
+    <div class="mb-3">
         <label for="status" class="form-label">ステータス</label>
         <select th:field="*{status}" class="form-select" id="status">
             <option value="TODO" th:text="#{todo}"></option>

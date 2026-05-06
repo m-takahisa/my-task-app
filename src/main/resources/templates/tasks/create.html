@@ -20,6 +20,15 @@
         </div>
     </div>
     <div class="mb-3">
+        <label for="priority" class="form-label">優先度</label>
+        <select th:field="*{priority}" class="form-select" id="priority">
+            <option value="CRITICAL" th:text="#{critical}"></option>
+            <option value="HIGH" th:text="#{high}"></option>
+            <option value="MEDIUM" th:text="#{medium}"></option>
+            <option value="LOW" th:text="#{low}"></option>
+        </select>
+    </div>
+    <div class="mb-3">
         <label for="description" class="form-label">内容</label>
         <textarea th:field="*{description}" class="form-control" id="description" rows="3"></textarea>
     </div>
