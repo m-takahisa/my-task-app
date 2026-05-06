@@ -32,6 +32,16 @@ public class TaskController {
     }
 
     /**
+     * 詳細画面の表示
+     */
+    @GetMapping("/{id}")
+    public String show(@PathVariable Long id, Model model) {
+        TaskResponse task = taskService.getTaskResponseById(id);
+        model.addAttribute("task", task);
+        return "tasks/show";
+    }
+
+    /**
      * 登録画面を表示する
      */
     @GetMapping("/new")

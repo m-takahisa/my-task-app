@@ -33,9 +33,17 @@ public class TaskService {
     /**
      * タスクの取得処理
      */
+    // 登録・編集画面用（バリデーションが必要な場合）
     public TaskRequest getTaskRequestById(Long id) {
         return taskRepository.findById(id)
                 .map(TaskRequest::fromEntity)
+                .orElseThrow(() -> new ResourceNotFoundException("指定されたタスク（ID: " + id + "）は見つかりません。"));
+    }
+
+    // 詳細画面用（表示だけの場合）
+    public TaskResponse getTaskResponseById(Long id) {
+        return taskRepository.findById(id)
+                .map(TaskResponse::fromEntity)
                 .orElseThrow(() -> new ResourceNotFoundException("指定されたタスク（ID: " + id + "）は見つかりません。"));
     }
 

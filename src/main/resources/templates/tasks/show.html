@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>タスク詳細</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container py-4">
+<h1 class="mb-4">タスク詳細</h1>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h2 class="card-title mb-4" th:text="${task.title}">タイトル</h2>
+        <div class="row mb-3">
+            <div class="col-sm-3 fw-bold">ステータス</div>
+            <div class="col-sm-9">
+                <span class="badge bg-primary" th:text="${task.statusDisplayName}"></span>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-sm-3 fw-bold">優先度</div>
+            <div class="col-sm-9">
+                <span class="badge bg-info text-dark" th:text="${task.priorityDisplayName}"></span>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-sm-3 fw-bold">内容</div>
+            <div class="col-sm-9">
+                <!-- 改行を保持するために white-space: pre-wrap を指定 -->
+                <p class="text-muted" style="white-space: pre-wrap;"
+                   th:text="${#strings.isEmpty(task.description)} ? '（なし）' : ${task.description}"></p>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-sm-3 fw-bold">開始日</div>
+            <div class="col-sm-9" th:text="${task.startDate}"></div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-sm-3 fw-bold">期限日</div>
+            <div class="col-sm-9" th:text="${task.dueDate}"></div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-sm-3 fw-bold">完了</div>
+            <div class="col-sm-9">
+                <span th:if="${task.completed}" class="text-success" th:text="#{completed}">完了</span>
+                <span th:unless="${task.completed}" class="text-secondary" th:text="#{incomplete}">未完了</span>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-sm-3 fw-bold">作成日時</div>
+            <div class="col-sm-9" th:text="${#temporals.format(task.createdAt, 'yyyy/MM/dd HH:mm')}"></div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-sm-3 fw-bold">更新日時</div>
+            <div class="col-sm-9" th:text="${#temporals.format(task.updatedAt, 'yyyy/MM/dd HH:mm')}"></div>
+
+        </div>
+        <hr>
+        <div class="d-flex gap-2">
+            <a th:href="@{/view/tasks/{id}/edit(id=${task.id})}" class="btn btn-primary">編集する</a>
+            <a th:href="@{/view/tasks}" class="btn btn-outline-secondary">一覧に戻る</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

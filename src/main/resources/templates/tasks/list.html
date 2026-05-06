@@ -83,7 +83,9 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="task : ${displayData.tasks}">
+    <tr th:each="task : ${displayData.tasks}"
+        th:onclick="|location.href='@{/view/tasks/{id}(id=${task.id})}'|"
+        style="cursor: pointer;">
         <td th:text="${task.title}"></td>
         <td>
             <span class="badge bg-info text-dark" th:text="${task.priorityDisplayName}"></span>
@@ -104,7 +106,7 @@
                 <a th:href="@{/view/tasks/{id}/edit(id=${task.id})}" class="btn btn-outline-primary btn-sm">編集</a>
 
                 <form th:action="@{/view/tasks/{id}/delete(id=${task.id})}" method="post"
-                      onsubmit="return confirm('本当に削除しますか？');">
+                      onsubmit="event.stopPropagation(); return confirm('本当に削除しますか？');">
                     <button type="submit" class="btn btn-outline-danger btn-sm">削除</button>
                 </form>
             </div>
